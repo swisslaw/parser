@@ -11,9 +11,9 @@ describe SwissLaw::Parser do
   gen = SwissLaw::Parser.new(RAW)
   Find.find DATA do |file|
     next unless File.file? file
-    sr, article = *file.split("/")[-2..-1]
+    lang, sr, article = *file.split("/")[-3..-1]
     it "should generate sr:#{sr} article:#{article}" do
-      gen['d', sr, article].to_textile.must_equal File.read(file)
+      gen[lang, sr, article].to_textile.must_equal File.read(file)
     end
   end
 end
