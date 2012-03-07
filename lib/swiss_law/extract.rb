@@ -8,9 +8,6 @@ module SwissLaw
   class Text
     def initialize(element)
       @element = element
-      text = element.xpath("text()").to_s.encode('utf-8').strip.delete("\xc2\xa0")
-      @raw_text = CGI.unescapeHTML(text)
-      binding.pry if self.class == Footnote
     end
 
     attr :raw_text
@@ -22,13 +19,25 @@ module SwissLaw
   end
 
   class Paragraph < Text
+    def initialize(element)
+      super
+      text = @element.xpath("text()").to_s.encode('utf-8').strip.delete("\xc2\xa0")
+      @raw_text = CGI.unescapeHTML(text)
+    end
+    
     def index
-      @index ||= (a = @element.css('a')) && a.text
+      (a = @element.css('a')) && a.text
     end
   end
 
   class Footnote < Text
+    def initialize(element)
+      super
+      @raw_text = @element.child.children[1..-1].text.strip.delete("\r\n").gsub("  ", " ")
+    end
+
     def index
+      (a = @element.css('a').first) && a.text
     end
   end
 
@@ -65,7 +74,7 @@ module SwissLaw
     PFKLASSES = [Paragraph, Footnote]
     def paragraph_footnotes
       @paragraph_footnotes ||= @parsed.xpath("//p[preceding::h5]").partition do |cand|
-        not cand['name'] =~ /fn/
+        cand.xpath("ancestor::div[@id='fns']").empty?
       end.map.with_index do |paragraphs, index|
         paragraphs.map do |element|
           text = PFKLASSES[index].new(element)

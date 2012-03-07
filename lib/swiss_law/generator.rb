@@ -16,7 +16,11 @@ module SwissLaw
 
   class Article
     def to_textile
-      "h1. %s\n\n" % [title] + paragraphs.map(&:to_textile).join("\n") + footnotes.map(&:to_textile).join("\n") + "\n"
+      out = "h1. %s\n\n" % [title] << paragraphs.map(&:to_textile).join("\n")
+      unless footnotes.empty?
+        out << "\n\n" << footnotes.map(&:to_textile).join("\n")
+      end
+      out << "\n"
     end
   end
 end
