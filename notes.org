@@ -1,0 +1,7 @@
+* Datenfelder
+  - Gesetz
+  - Artikel Nummer
+  - Paragraph(en)
+  - Fussnote(n)
+* dling
+  wget -r -np -e robots=off http://www.admin.ch/ch/d/sr/101/
