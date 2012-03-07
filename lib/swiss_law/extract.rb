@@ -39,19 +39,19 @@ module SwissLaw
     end
 
     def index
-      @index ||= File.basename(@file, ".html")[1..-1]
+      File.basename(@file, ".html")[1..-1]
     end
 
     def sr
-      @sr ||= @file.split("/")[-2]
+      @file.split("/")[-2]
     end
 
     def paragraphs
-      @paragraphs ||= paragraph_footnotes.first
+      paragraph_footnotes.first
     end
 
     def footnotes
-      @footnotes ||= paragraph_footnotes.last
+      paragraph_footnotes.last
     end
 
     def footnotes?
@@ -59,7 +59,7 @@ module SwissLaw
     end
 
     def title
-      @title ||= @parsed.css('title').text
+      @parsed.css('title').text.match(/.*Art..\d+\w* (.+) \(.*/)[1].strip
     end
 
     PFKLASSES = [Paragraph, Footnote]

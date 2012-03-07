@@ -1,7 +1,10 @@
 module SwissLaw
   class Paragraph
     def to_textile
-      "%s. %s" % [index, text]
+      out = ""
+      index.empty? or out << index.to_s + ". "
+      out << text
+      out
     end
   end
 
@@ -13,7 +16,7 @@ module SwissLaw
 
   class Article
     def to_textile
-      "h1. %s\n\n" % [title] + paragraphs.map(&:to_textile).join("\n") + footnotes.map(&:to_textile).join("\n")
+      "h1. %s\n\n" % [title] + paragraphs.map(&:to_textile).join("\n") + footnotes.map(&:to_textile).join("\n") + "\n"
     end
   end
 end
