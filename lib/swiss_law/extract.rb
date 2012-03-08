@@ -14,19 +14,18 @@ module SwissLaw
       @element.xpath("//a[contains(@href, 'fn')]")
     end
 
-    attr :raw_text
-    alias :text :raw_text
-
     def empty?
-      @raw_text.size < 2
+      text.size < 2
     end
   end
 
   class Paragraph < Text
     def initialize(element)
       super
-      text = @element.xpath("text()").to_s.encode('utf-8').strip.delete("\xc2\xa0")
-      @raw_text = CGI.unescapeHTML(text)
+    end
+
+    def text
+      CGI.unescapeHTML(@element.xpath("text()").to_s.encode('utf-8').strip.delete("\xc2\xa0"))
     end
     
     def index
@@ -37,7 +36,10 @@ module SwissLaw
   class Footnote < Text
     def initialize(element)
       super
-      @raw_text = @element.child.children[1..-1].text.strip.delete("\r\n").gsub("  ", " ")
+    end
+
+    def text
+      @element.child.children[1..-1].text.strip.delete("\r\n").gsub("  ", " ")
     end
 
     def index
@@ -48,7 +50,10 @@ module SwissLaw
   class Title < Text
     def initialize(element)
       super
-      @raw_text = @element.text.match(/.*Art..\d+\w* (.+) \(.*/)[1].strip
+    end
+
+    def text
+      @element.text.match(/.*Art..\d+\w* (.+) \(.*/)[1].strip
     end
   end
 
