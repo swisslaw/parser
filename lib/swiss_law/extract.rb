@@ -55,32 +55,28 @@ module SwissLaw
       @file.split("/")[-2]
     end
 
+    def paragraphs_elements
+      @parsed.xpath("//p[preceding::h5]") - footnotes_elements
+    end
+
+    def footnotes_elements
+      @parsed.xpath("//div[@id='fns']//p[preceding::h5]")
+    end
+
     def paragraphs
-      paragraph_footnotes.first
+      paragraphs_elements.map {|element| Paragraph.new element}.reject {|element| element.empty?}
     end
 
     def footnotes
-      paragraph_footnotes.last
+      footnotes_elements.map {|element| Footnote.new element}.reject {|element| element.empty?}
     end
-
+    
     def footnotes?
       !! @parsed.css('#fns')
     end
 
     def title
       @parsed.css('title').text.match(/.*Art..\d+\w* (.+) \(.*/)[1].strip
-    end
-
-    PFKLASSES = [Paragraph, Footnote]
-    def paragraph_footnotes
-      @paragraph_footnotes ||= @parsed.xpath("//p[preceding::h5]").partition do |cand|
-        cand.xpath("ancestor::div[@id='fns']").empty?
-      end.map.with_index do |paragraphs, index|
-        paragraphs.map do |element|
-          text = PFKLASSES[index].new(element)
-          text.empty? ? nil : text
-        end.compact
-      end
     end
 
     def inspect
