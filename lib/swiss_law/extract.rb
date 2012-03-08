@@ -9,6 +9,10 @@ module SwissLaw
     def initialize(element)
       @element = element
     end
+    
+    def references
+      @element.xpath("//a[contains(@href, 'fn')]")
+    end
 
     attr :raw_text
     alias :text :raw_text
@@ -41,6 +45,13 @@ module SwissLaw
     end
   end
 
+  class Title < Text
+    def initialize(element)
+      super
+      @raw_text = @element.text.match(/.*Art..\d+\w* (.+) \(.*/)[1].strip
+    end
+  end
+
   class Article
     def initialize(file)
       @file = file
@@ -70,13 +81,17 @@ module SwissLaw
     def footnotes
       footnotes_elements.map {|element| Footnote.new element}.reject {|element| element.empty?}
     end
-    
+
     def footnotes?
       !! @parsed.css('#fns')
     end
 
+    def title_element
+      @parsed.css('title')
+    end
+
     def title
-      @parsed.css('title').text.match(/.*Art..\d+\w* (.+) \(.*/)[1].strip
+      Title.new(title_element)
     end
 
     def inspect
