@@ -159,7 +159,7 @@ module SwissLaw
         element.name == 'br'
       end.map do |element|
         Footnote.new element
-      end.reject {|element| element.empty?}
+      end.reject(&:empty?)
     end
 
     def footnotes?
