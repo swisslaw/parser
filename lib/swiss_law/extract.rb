@@ -86,9 +86,6 @@ module SwissLaw
       @content.strip!
     end
     
-    def references
-      raise NotImplementedError
-    end
     attr :index
 
     private

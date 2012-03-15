@@ -1,8 +1,16 @@
 module SwissLaw
   class Text
     def insert_references(string)
+      offset = 0
       @references.each do |ref|
-        string[ref.index, 0] = "[#{ref.fn}] "
+        ins = "[#{ref.fn}]"
+        if ref.index == 0
+          ins << " "
+        else
+          ins.prepend(" ")
+        end
+        string[ref.index + offset, 0] = ins
+        offset += ins.size
       end
       string
     end
