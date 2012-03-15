@@ -43,6 +43,10 @@ module SwissLaw
     def a(child)
       # ignore
     end
+
+    def i(child)
+      @content << '__' << child.text << '__'
+    end
   end
 
   class Title < Text
@@ -66,10 +70,12 @@ module SwissLaw
     end
     
     def sup(child)
-      if child.xpath('./a').first['href']
+      if link = child.xpath('./a').first and link['href']
         super
-      else
+      elsif link
         @index = child.text
+      else
+        @content << child.text
       end
     end
   end
@@ -101,6 +107,10 @@ module SwissLaw
         @content << child.text.clean
       end
     end
+
+    def br(child)
+      # ignore, assume it's EOL
+    end
   end
 
   class Reference
@@ -112,7 +122,7 @@ module SwissLaw
     attr :index
 
     def fn
-      @element.xpath('./a').first['href'].match(/#fn(\d+)/)[1]
+      @element.xpath('.//a').first['href'].match(/#fn(\d+)/)[1]
     end
   end
 
