@@ -21,11 +21,11 @@ module SwissLaw
     end
 
     def paragraphs_elements
-      @parsed.xpath("//p[preceding::h5]") - footnotes_paragraph
+      @parsed.xpath("//div[@id='spalteContentPlus']/*[preceding::h5 and following::hr and not(preceding::hr)]")
     end
 
-    def footnotes_paragraph
-      @parsed.xpath("//div[@id='fns']//p[preceding::h5]")
+    def footnotes_elements
+      @parsed.xpath("//div[@id='fns']//p[preceding::h5]/small")
     end
 
     def paragraphs
@@ -33,7 +33,7 @@ module SwissLaw
     end
 
     def footnotes
-      footnotes_paragraph.xpath('./small').children.slice_before do |element|
+      footnotes_elements.children.slice_before do |element|
         element.name == 'br'
       end.map do |element|
         Footnote.new element
