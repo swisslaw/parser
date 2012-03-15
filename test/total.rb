@@ -1,11 +1,8 @@
-$LOAD_PATH << File.expand_path('../lib', File.dirname(__FILE__))
-require 'swiss_law'
 DATA = File.expand_path('data', File.dirname(__FILE__))
-RAW = File.expand_path('../www.admin.ch', File.dirname(__FILE__))
-require 'find'
 require 'minitest/spec'
 require 'minitest/autorun'
 require 'pry'
+require 'find'
 
 describe SwissLaw::Parser do
   gen = SwissLaw::Parser.new(RAW)
