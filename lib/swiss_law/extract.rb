@@ -4,56 +4,115 @@ require 'pry'
 require 'cgi'
 Encoding.default_internal = Encoding.default_external = 'utf-8'
 
+class String
+  def clean
+    clean_without_strip.strip
+  end
+
+  def clean_without_strip
+    CGI.unescapeHTML(self.delete("\xc2\xa0").delete("\r\n").gsub("  ", " "))
+  end
+end
+
 module SwissLaw
   class Text
     def initialize(element)
       @element = element
-    end
-    
-    def references
-      @element.xpath("//a[contains(@href, 'fn')]")
+      @content = ""
+      @references = []
+      @element.children.each do |child|
+        send(child.name, child)
+      end
     end
 
+    attr :content
+
     def empty?
-      text.size < 2
+      content.size < 2
+    end
+
+    private
+    def sup(child)
+      @references << Reference.new(child, @content.size)
+    end
+
+    def text(child)
+      @content << child.text.clean
+    end
+
+    def a(child)
+      # ignore
     end
   end
 
-  class Paragraph < Text
-    def initialize(element)
-      super
+  class Title < Text
+    def b(child)
+      if @first_b
+        @content << child.text.clean
+      end
+      @first_b = true
     end
 
-    def text
-      CGI.unescapeHTML(@element.xpath("text()").to_s.encode('utf-8').strip.delete("\xc2\xa0"))
+    def i(child)
+      unless @content.empty?
+        @content << child.text.clean
+      end
+    end
+  end
+  
+  class Paragraph < Text
+    def index
+      @index
     end
     
-    def index
-      (a = @element.css('a')) && a.text
+    def sup(child)
+      if child.xpath('./a').first['href']
+        super
+      else
+        @index = child.text
+      end
     end
   end
 
   class Footnote < Text
     def initialize(element)
       super
+      @content.strip!
+    end
+    
+    def references
+      raise NotImplementedError
+    end
+    attr :index
+
+    private
+    def b(child)
+      @content << child.text
     end
 
-    def text
-      @element.child.children[1..-1].text.strip.delete("\r\n").gsub("  ", " ")
+    def text(child)
+      @content << child.text.clean_without_strip
     end
 
-    def index
-      (a = @element.css('a').first) && a.text
+    def a(child)
+      unless @index
+        @index = child.text
+      else
+        @content << child.text.clean
+      end
     end
   end
 
-  class Title < Text
-    def initialize(element)
-      super
+  class Reference
+    def initialize(element, index)
+      @element = element
+      @index = index
     end
 
-    def text
-      @element.text.match(/.*Art..\d+\w* (.+) \(.*/)[1].strip
+    attr :index
+
+    def fn
+      @element.xpath('./a').first['href'].match(/#fn(\d+)/)[1]
     end
   end
 
@@ -84,7 +143,10 @@ module SwissLaw
     end
 
     def footnotes
-      footnotes_elements.map {|element| Footnote.new element}.reject {|element| element.empty?}
+      footnotes_elements.map do |element|
+        element = element.xpath('./small') or element
+        Footnote.new element
+      end.reject {|element| element.empty?}
     end
 
     def footnotes?
@@ -92,7 +154,7 @@ module SwissLaw
     end
 
     def title_element
-      @parsed.css('title')
+      @parsed.css('h5')
     end
 
     def title

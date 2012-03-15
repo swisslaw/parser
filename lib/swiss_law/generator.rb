@@ -1,22 +1,31 @@
 module SwissLaw
+  class Text
+    def insert_references(string)
+      @references.each do |ref|
+        string[ref.index, 0] = "[#{ref.fn}] "
+      end
+      string
+    end
+  end
+  
   class Paragraph
     def to_textile
       out = ""
-      index.empty? or out << index.to_s + ". "
-      out << text
+      index and out << index.to_s + ". "
+      out << insert_references(content)
       out
     end
   end
 
   class Title
     def to_textile
-      "h1. %s\n\n" % [text]
+      "h1. %s\n\n" % [insert_references(content)]
     end
   end
 
   class Footnote
     def to_textile
-      "fn%s. %s" % [index, text]
+      "fn%s. %s" % [index, content]
     end
   end
   
