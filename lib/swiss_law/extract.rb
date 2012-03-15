@@ -1,6 +1,5 @@
 # encoding: utf-8
 require 'nokogiri'
-require 'pry'
 require 'cgi'
 Encoding.default_internal = Encoding.default_external = 'utf-8'
 
@@ -11,6 +10,12 @@ class String
 
   def clean_without_strip
     CGI.unescapeHTML(self.delete("\xc2\xa0").delete("\r\n").gsub("  ", " "))
+  end
+end
+
+class Array
+  def children
+    self
   end
 end
 
@@ -138,10 +143,10 @@ module SwissLaw
     end
 
     def paragraphs_elements
-      @parsed.xpath("//p[preceding::h5]") - footnotes_elements
+      @parsed.xpath("//p[preceding::h5]") - footnotes_paragraph
     end
 
-    def footnotes_elements
+    def footnotes_paragraph
       @parsed.xpath("//div[@id='fns']//p[preceding::h5]")
     end
 
@@ -150,8 +155,9 @@ module SwissLaw
     end
 
     def footnotes
-      footnotes_elements.map do |element|
-        element = element.xpath('./small') or element
+      footnotes_paragraph.xpath('./small').children.slice_before do |element|
+        element.name == 'br'
+      end.map do |element|
         Footnote.new element
       end.reject {|element| element.empty?}
     end
