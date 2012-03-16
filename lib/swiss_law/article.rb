@@ -53,7 +53,7 @@ module SwissLaw
     end
 
     def inspect
-      "#<Law index=#{index}, sr=#{sr}, title=#{title}, paragraphs=#{paragraphs.inspect}, footnotes=#{footnotes.inspect}>"
+      "#<Law index=#{index}, sr=#{sr}, title=#{title}>"
     end
   end
 end
