@@ -29,6 +29,7 @@ module SwissLaw
     end
 
     def paragraphs
+      binding.pry
       paragraphs_elements.map {|element| Paragraph.new element}.reject {|element| element.empty?}
     end
 
