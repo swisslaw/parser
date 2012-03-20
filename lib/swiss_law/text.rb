@@ -1,14 +1,13 @@
 module SwissLaw
   class Text
     def initialize(element)
-      @element = element
-      @content = ""
-      @references = []
+      @element ||= element
+      @content ||= ""
+      @references ||= []
       @element.children.each do |child|
         send(child.name, child)
       end
     end
-
 
     attr :content
 

@@ -21,7 +21,7 @@ module SwissLaw
       out = ""
       index and out << index.to_s + ". "
       out << insert_references(content)
-      out
+      out.sub(/\n$/, "")
     end
   end
 
