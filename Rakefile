@@ -21,7 +21,7 @@ task(:gen) do
         out.write gen[lang, sr, article].to_textile
       end
     rescue => e
-      puts e
+      puts "lang: %s sr: %s art: %s error: %s" % [lang, sr, article, e]
     end
   end
 end
