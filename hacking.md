@@ -1,5 +1,9 @@
 # Contribution Guide
 
+## Get Data
+
+Run `rake prepare`.
+
 ## Write Tests
 
 We don't really do unit tests for the parser, there are only

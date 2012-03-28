@@ -25,3 +25,7 @@ task(:gen) do
     end
   end
 end
+
+task(:prepare) do
+  system("wget -r -np -e robots=off http://www.admin.ch/ch/d/sr/101/")
+end
