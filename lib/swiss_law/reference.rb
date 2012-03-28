@@ -1,14 +1,15 @@
 module SwissLaw
   class Reference
-    def initialize(element, index)
+    def initialize(element)
       @element = element
-      @index = index
     end
-
-    attr :index
 
     def fn
       @element.xpath('.//a').first['href'].match(/#fn(\d+)/)[1]
+    end
+
+    def to_s
+      "[#{fn}]"
     end
   end
 end

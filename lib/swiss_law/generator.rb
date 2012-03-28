@@ -1,33 +1,16 @@
 module SwissLaw
-  class Text
-    def insert_references(string)
-      offset = 0
-      @references.each do |ref|
-        ins = "[#{ref.fn}]"
-        if ref.index == 0
-          ins << " "
-        else
-          ins.prepend(" ")
-        end
-        string[ref.index + offset, 0] = ins
-        offset += ins.size
-      end
-      string
-    end
-  end
-  
   class Paragraph
     def to_textile
       out = ""
-      index and out << index.to_s + ". "
-      out << insert_references(content)
+      index and out << index.to_s + "."
+      out << content
       out.sub(/\n$/, "")
     end
   end
 
   class Title
     def to_textile
-      "h1. %s\n\n" % [insert_references(content)]
+      "h1. %s\n\n" % [content]
     end
   end
 

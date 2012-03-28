@@ -1,12 +1,11 @@
 require 'swiss_law/text'
 module SwissLaw
   class Footnote < Text
-    def initialize(element)
-      super
-      @content.strip!
-    end
-    
     attr :index
+
+    def content
+      super.strip
+    end
 
     private
     def b(child)
@@ -15,6 +14,10 @@ module SwissLaw
 
     def text(child)
       @content << child.text.clean_without_strip
+    end
+
+    def sup(child)
+      # footnotes in footnotes?
     end
 
     def a(child)

@@ -5,7 +5,7 @@ class String
   end
 
   def clean_without_strip
-    CGI.unescapeHTML(self.delete("\xc2\xa0").delete("\r\n").gsub("  ", " "))
+    CGI.unescapeHTML(self.gsub("\xc2\xa0", " ").delete("\r\n").gsub("  ", " "))
   end
 end
 

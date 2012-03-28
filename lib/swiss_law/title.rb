@@ -13,5 +13,9 @@ module SwissLaw
         @content << child.text.clean
       end
     end
+
+    def text(child)
+      @content << child.text.clean
+    end
   end
 end
