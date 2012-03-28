@@ -9,7 +9,7 @@ html path.
 
 ## Run Tests
 
-`ruby test/total.rb`
+`rake test`
 
 ## Everything else
 
