@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 require 'swiss_law/text'
 module SwissLaw
   class Footnote < Text
@@ -5,6 +6,10 @@ module SwissLaw
 
     def content
       super.strip
+    end
+
+    def interesting?
+      ! @text =~ /^Angenommen|^Aufgehoben|^Mit Übergangsbestimmung/
     end
 
     private

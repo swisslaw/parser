@@ -26,7 +26,7 @@ module SwissLaw
       @content << @current_le
     end
 
-    # fix for testcase 196 (I've always wanted to write that)
+    # fix for testcase 196
     def tbody(child)
     end
 
@@ -34,7 +34,7 @@ module SwissLaw
       text = child.text
       if md = text.match(/^\s*(\d+)\.(.*)/)
         @index = md[1]
-        @content << "__" + md[2].clean + "__"
+        @content << md[2].clean
       else
         super
       end

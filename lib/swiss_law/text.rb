@@ -28,9 +28,8 @@ module SwissLaw
       # ignore
     end
 
-    # not template-agnostic - uses __text__ for i
     def i(child)
-      @content << '__' << child.text << '__'
+      @content <<  child.text
     end
 
     def content
