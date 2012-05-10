@@ -18,6 +18,7 @@ module SwissLaw
 
     def dt(child)
       @current_le = ListElement.new
+      @current_le.order = 1
       @current_le.index = child.text[/\w+/]
     end
 

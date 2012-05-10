@@ -1,8 +1,9 @@
 module SwissLaw
-  class ListElement < Struct.new(:index, :content)
-    FORMAT = "  %s. %s\n"
+  class ListElement < Struct.new(:index, :content, :order)
+    FORMAT = "%s. %s\n"
+    INDENT = "  "
     def to_s
-      FORMAT % [index, content]
+      INDENT * order + FORMAT % [index, content]
     end
     alias text to_s
   end
