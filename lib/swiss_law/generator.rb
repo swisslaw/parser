@@ -27,6 +27,10 @@ module SwissLaw
         out << "\n\n" << footnotes.map(&:to_textile).join("\n")
       end
       out << "\n"
+      cs = Text::COLLAPSING_SPACE
+      out.gsub!(/#{cs}$/, '')
+      out.gsub!(/#{cs} | #{cs}|#{cs}/, " ")
+      out
     end
   end
 end

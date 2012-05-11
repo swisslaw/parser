@@ -9,7 +9,7 @@ module SwissLaw
     end
 
     def to_s
-      "[#{fn}]"
+      Text::COLLAPSING_SPACE + "[#{fn}]" + Text::COLLAPSING_SPACE
     end
   end
 end

@@ -23,7 +23,7 @@ module SwissLaw
     end
 
     def dd(child)
-      @current_le.content = child.text
+      @current_le.content = child.text.clean
       @content << @current_le
     end
 

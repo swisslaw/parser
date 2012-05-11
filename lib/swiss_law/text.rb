@@ -1,5 +1,7 @@
 module SwissLaw
   class Text
+    # This space is collapsed if left or right is a space
+    COLLAPSING_SPACE = "\x01"
     def initialize(element)
       @element ||= element
       @content ||= []
@@ -29,7 +31,7 @@ module SwissLaw
     end
 
     def i(child)
-      @content <<  child.text
+      @content << child.text
     end
 
     def content
