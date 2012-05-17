@@ -1,22 +1,24 @@
+require 'swiss_law/core_ext'
 module SwissLaw
   class Paragraph
     def to_textile
       out = ""
-      index and out << index.to_s + "."
+      index and out << index.to_s + ". "
       out << content
       out.sub(/\n$/, "")
+      out.collapse_spaces!
     end
   end
 
   class Title
     def to_textile
-      "h1. %s\n\n" % [content]
+      ("h1. %s\n\n" % [content]).collapse_spaces!
     end
   end
 
   class Footnote
     def to_textile
-      "fn%s. %s" % [index, content]
+      ("fn%s. %s" % [index, content]).collapse_spaces!
     end
   end
   
@@ -27,10 +29,6 @@ module SwissLaw
         out << "\n\n" << footnotes.map(&:to_textile).join("\n")
       end
       out << "\n"
-      cs = Text::COLLAPSING_SPACE
-      out.gsub!(/#{cs}$/, '')
-      out.gsub!(/#{cs} | #{cs}|#{cs}/, " ")
-      out
     end
   end
 end
