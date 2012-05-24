@@ -1,5 +1,6 @@
 require 'swiss_law/text'
 require 'swiss_law/list_element'
+require 'swiss_law/table'
 module SwissLaw
   class Paragraph < Text
     def index
@@ -29,6 +30,7 @@ module SwissLaw
 
     # fix for testcase 196
     def tbody(child)
+      @content << Table.new(child)
     end
 
     def i(child)
