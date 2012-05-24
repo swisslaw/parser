@@ -1,4 +1,5 @@
 # encoding: utf-8
+require 'cgi'
 class String
   def clean
     clean_without_strip.strip
@@ -11,6 +12,8 @@ class String
   def collapse_spaces!
     cs = SwissLaw::Text::COLLAPSING_SPACE
     gsub!(/#{cs}$/, '')
+    gsub!(/^#{cs}/, '')
+    gsub!(/#{cs}(?:#{cs})*/, "#{cs}")
     gsub!(/#{cs} | #{cs}|#{cs}/, " ")
     self
   end
