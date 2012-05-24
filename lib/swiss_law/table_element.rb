@@ -8,7 +8,7 @@ module SwissLaw
     end
 
     def to_s
-      ("  " * order + "#{index}." + content.zip(pre).each(&:reverse!).flatten.join(Text::COLLAPSING_SPACE)).collapse_spaces!
+      (INDENT * order + "#{index}." + content.zip(pre).each(&:reverse!).flatten.join(Text::COLLAPSING_SPACE)).collapse_spaces!
     end
 
     attr_accessor :pre
